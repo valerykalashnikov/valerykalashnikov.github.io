@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Deploying rails apps, part 2. Setting up the necessary software &#8211; BigK's blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The second article of deployment series. Setting up the necessary software.">
+    <meta name="robots" content="all">
+    <meta name="author" content="Big K">
+    <meta name="keywords" content="rails, deployment">
+    <link rel="canonical" href="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201603091605" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Deploying rails apps, part 2. Setting up the necessary software">
+    <meta property="og:description" content="BigK&#39;s blog">
+    <meta property="og:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/">
+    <meta property="og:site_name" content="BigK&#39;s blog">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Deploying rails apps, part 2. Setting up the necessary software" />
+    <meta name="twitter:description" content="The second article of deployment series. Setting up the necessary software." />
+    <meta name="twitter:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/" />
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://bigk.me" class="site-title">BigK's blog</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About</a>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Deploying rails apps, part 2. Setting up the necessary software</h1>
+  <span class="post-meta">Feb 8, 2015</span><br>
+  
+  <span class="post-meta small">
+  
+    2 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-1-bootstrap-the-server/">previous</a> part of my articles I talk about bootstraping the server to prepare it to install neccessary software. Now we&rsquo;ll install RVM, Node.js, Nginx, Ruby, Bundler and Postrgres.</p>
+
+<h2 id="setting-up-the-necessary-software">Setting up the necessary software</h2>
+
+<p>So, the next step is setting up the RVM - tool to manage the versions of gems simplier.</p>
+
+<p>Switching to root and the first thing we uprading the versions of sofware in the repository</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get update
+  apt-get dist-upgrade
+</code></pre></div>
+<p>Install some useful software we will need later:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get -y install curl git
+</code></pre></div>
+<h3 id="rvm-ruby-and-bundler-installation">Rvm, ruby, and bundler installation</h3>
+
+<p>Switch to deploy user:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  login deploy -f
+</code></pre></div>
+<p>And install rvm after that.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+  <span class="se">\c</span>url -sSL https://get.rvm.io | bash -s stable
+</code></pre></div>
+<p>Install ruby</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  rvm install 2.1.1 <span class="o">(</span>or version that you prefer<span class="o">)</span>
+</code></pre></div>
+<p>Install bundler</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  gem install bundler --no-ri --no-rdoc
+  <span class="o">[[</span> -s <span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.rvm/scripts/rvm"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> . <span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.rvm/scripts/rvm"</span>
+</code></pre></div>
+<h3 id="node-js-installation">Node.js installation.</h3>
+
+<p>Next install Node.js -  Rails uses it to compile static assets.
+Don&rsquo;t forget to switch to root or use sudo.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  add-apt-repository ppa:chris-lea/node.js
+  apt-get -y update
+  apt-get -y install nodejs
+</code></pre></div>
+<h3 id="nginx-installation">Nginx installation.</h3>
+
+<p>The next step is installing Nginx - it will serve our static requests.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  add-apt-repository ppa:nginx/stable
+  apt-get -y update
+  apt-get -y install nginx
+
+</code></pre></div>
+<p>And start nginx:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  service nginx start
+</code></pre></div>
+<h3 id="postgresql-installation">PostgreSQL installation</h3>
+
+<p>My choice is using Postgres - it&rsquo;s smart, clever and has very convenient console.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get install postgresql postgresql-contrib libpq-dev
+</code></pre></div>
+<p>During the installation PostgreSQL created &lsquo;postgres&rsquo; user. So, let&rsquo;s start use database console as postgres user.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  sudo -u postgres psql
+</code></pre></div>
+<p>In the console:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  create role deploy superuser;
+  alter role deploy login;
+</code></pre></div>
+<p>We&rsquo;ve created new database user &#39;deploy&rsquo;, give him superuser rights and allow him to login. This user can login but only from the localhost.</p>
+
+<p>The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called &#39;pgtune&rsquo; that configure you database based on your environment.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get install pgtune
+</code></pre></div>
+<p>after that we should find postgresql.conf file to feed it to pgtune. Login to the &ldquo;psql&rdquo; console mentioned before and type.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">  SHOW config_file;
+</code></pre></div>
+<p>Use <code>\q</code> for logout, then</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  pgtune -i path/to/postgresql.conf -o path/to/postgresql.conf
+  service postgresql restart
+</code></pre></div>
+<h2 id="summary">Summary</h2>
+
+<p>In this section we setting up the necessary software to serve rails application. In the next section I cover how to install and configure Capistrano with Puma server and how to configure Nginx.</p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <small>
+      Powered by <a href="http://pixyll.com/">Pixyll theme</a> and <a href="https://jekyllrb.com//">jekyll</a>
+    </small>
+  </div>
+</footer>
+
+</body>
+</html>

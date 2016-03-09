@@ -1,0 +1,85 @@
+<p>So, deploy time is coming. If the development with rails is funny, the deployment is like a pain - you have a day by day reading articles and googling. In this series of articles I’d like to show how to deploy simple rails application using Nginx, Puma server and Capistrano.</p>
+
+<p>The problem standing in front of me is when you setting up the server following a lot of tutorials, you do it with a necessity to type(and store) a lot of passwords - and when you do it, it’s a little bit uncomfortable.
+<!--more--></p>
+
+<h2 id="bootstraping">Bootstraping</h2>
+
+<p>Let’s setting up the server. My choice is DigitalOcean server but you can use any different provider. Therefore I want to deploy my application to the smallest 521MB RAM machine, my choice is 32-bit Ubuntu because it uses less memory than 64-bit version</p>
+
+<p>During setup process I’ve added my public key from ~/.ssh/id_rsa.pub via DigitalOcean GUI. Of cource you could implement the same via adding you public key to /root/.ssh/authorized_keys</p>
+
+<p>After machine created you’ll be given your new machine ip. Let’s loging in to the new server</p>
+
+<h2 id="setting-up">Setting up</h2>
+
+<p><code class="highlighter-rouge">
+ssh root@&lt;your new ip&gt;
+</code></p>
+
+<p>After that we should create a new user that will in charge of deployment process
+<code class="highlighter-rouge">
+adduser deploy
+</code></p>
+
+<p>The systems asks you the new user password and you have to type there really strong (don’t worry in the next steps we’ll pre
+vent us to type it on every sneeze via adding your public key to authorized_keys)</p>
+
+<p>Open sudoers</p>
+
+<p><code class="highlighter-rouge">
+  vim /etc/sudoers
+</code></p>
+
+<p>and add there</p>
+
+<p><code class="highlighter-rouge">
+  deploy  ALL=(ALL) NOPASSWD: ALL
+</code></p>
+
+<p>If you use Digital Ocean and machine with minimal configuration, don’t forget to use swap.</p>
+
+<p>```
+  (got from here https://gist.github.com/sharshenov/a34db47c2311acd38c92)</p>
+
+<p>dd if=/dev/zero of=/swapfile bs=1M count=1k
+  mkswap /swapfile
+  swapon /swapfile
+  echo ‘/swapfile       none    swap    sw      0       0 ‘ » /etc/fstab
+  echo 10 | tee /proc/sys/vm/swappiness
+  echo vm.swappiness = 10 | tee -a /etc/sysctl.conf
+  chown root:root /swapfile
+  chmod 0600 /swapfile</p>
+
+<p>```</p>
+
+<p>After that</p>
+
+<p><code class="highlighter-rouge">
+login deploy -f
+</code></p>
+
+<p>On deploy user:</p>
+
+<p><code class="highlighter-rouge">
+  ssh-copy-id deploy@&lt;your-machine-ip&gt;
+</code></p>
+
+<p>or</p>
+
+<p><code class="highlighter-rouge">
+mkdir -p ~/.ssh
+touch authorized_keys
+vim authorized_keys
+</code></p>
+
+<p>and copy there public key from your machine and save. After that
+<code class="highlighter-rouge">
+chmod 600 authorized_key
+</code></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>We created the server, created deploy user and give them an ability to simple loging in via ssh.</p>
+
+<p>In the next chapter we’ll set up the neccessary software to our new server.</p>

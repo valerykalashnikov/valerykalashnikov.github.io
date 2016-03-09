@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BigK&#39;s blog</title>
+    <description>BigK&#39;s blog</description>
+    <link>http://bigk.me/</link>
+    <atom:link href="http://bigk.me/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Deploying rails apps, part 3. Configuring capistrano, nginx with puma</title>
+        <description>&lt;p&gt;In the &lt;a href=&quot;http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/&quot;&gt;previous&lt;/a&gt; article we&amp;rsquo;ve set up the necessary soft for our rails application. In this article we&amp;rsquo;ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.&lt;/p&gt;
+
+&lt;h2 id=&quot;capistrano&quot;&gt;Capistrano&lt;/h2&gt;
+
+&lt;p&gt;To the Gemfile of your application add this lines or neccessary gems, mentioned below:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  gem &#39;puma&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  group :development do
+
+    gem &#39;capistrano&#39;
+    gem &#39;capistrano-rails&#39;
+    gem &#39;capistrano-bundler&#39;
+    gem &#39;capistrano-rvm&#39;
+    gem &#39;capistrano3-puma&#39;
+
+  end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I like puma in development because it&amp;rsquo;s better than Webrick. But if you like something different (like &lt;a href=&quot;http://pow.cx/&quot;&gt;pow&lt;/a&gt;) in development add &amp;lsquo;puma&amp;rsquo; gem to :production section.&lt;/p&gt;
+
+&lt;p&gt;After that:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  bundle install
+  cap install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To the new Capfile add&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  require &#39;capistrano/rvm&#39;
+  require &#39;capistrano/bundler&#39;
+  require &#39;capistrano/rails/assets&#39;
+  require &#39;capistrano/rails/migrations&#39;
+  require &#39;capistrano/puma&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To config/deploy.rb modify this strings:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  set :application, &#39;your_application_name&#39;
+  set :repo_url, &#39;your repository_url&#39;
+
+  set :deploy_user, &#39;deploy&#39;
+
+  set :deploy_to, &quot;/home/#{fetch :deploy_user}/apps/#{fetch :application}&quot;
+
+  set :rvm_ruby_version,  &#39;2.x.x@your_gemset --create&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And set linked files and dirs after that. Linked dirs or files - its files and directories that necessary for the project but not  designated to store in your repository. For example config files like database.yml, and folders like vendor/bundle, log, public/uploads (if you use something like CarrierWave to crop photos). This files have to be in a &amp;#39;shared&amp;rsquo; folder and each release should contain only symlinks for that otherwise it won&amp;rsquo;t appear in the next release (because that is not presented in the repository)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  set :linked_files, fetch(:linked_files, []).push(&#39;.env&#39;, &#39;config/you_first_config.yml&#39;, &#39;your_second_config&#39;)
+  set :linked_dirs, fetch(:linked_dirs, []).push(&#39;log&#39;, &#39;tmp/pids&#39;, &#39;tmp/cache&#39;, &#39;tmp/sockets&#39;, &#39;vendor/bundle&#39;, &#39;another_folder&#39;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the security reasons you should store your configuration values such &amp;#39;secret&lt;em&gt;key&lt;/em&gt;base&amp;rsquo;, postgres username and password, different oauth client&lt;em&gt;id and client&lt;/em&gt;secrets in environment variables. So, add to your Gemfile&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  gem &#39;dotenv-rails&#39;
+  bundle install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;add
+&lt;code&gt;
+.env
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;to your .gitignore file and create .env.example with example parameters in the root of the repository (you should store this file in the remote repository)&lt;/p&gt;
+
+&lt;p&gt;And another one - you should have file config/environments/production.rb. The rails default installation contains this file and I suppose that you know or can uderstand this options. If not you should met with &lt;a href=&quot;http://guides.rubyonrails.org/configuring.html&quot;&gt;configuring&lt;/a&gt; rails applications.&lt;/p&gt;
+
+&lt;p&gt;After that we should deploy the project the first time we will get the &lt;strong&gt;error&lt;/strong&gt;. Don&amp;rsquo;t worry, for now it&amp;rsquo;s okey.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  cap production deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Add to config/deploy/production.rb&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;role :app, %w{deploy@your-host-machine-ip}
+role :web, %w{deploy@your-host-machine-ip}
+role :db,  %w{deploy@your-host-machine-ip}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then ssh to your server as deploy user, go to ~/apps/your&lt;em&gt;app&lt;/em&gt;folder/shared and create .env file with your very secret values(for syntax and more see &lt;a href=&quot;https://github.com/bkeepers/dotenv&quot;&gt;.env&lt;/a&gt;).
+Don&amp;rsquo;t forget to create in shared folder files linked before (yes, that files and folders mentioned in &lt;code&gt;set :linked_files&lt;/code&gt;). So, your config files for example like secrets.yml, sidekiq.yml and others should be in ~/apps/your&lt;em&gt;app&lt;/em&gt;folder/shared/config&lt;/p&gt;
+
+&lt;p&gt;After you do it, run again&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt; cap production deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If your need to stop/start puma, use&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  cap production puma:start
+  cap production puma:stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Okey, it&amp;rsquo;s time to configure Nginx&lt;/p&gt;
+
+&lt;p&gt;Login as root and create file /etc/nginx/sites-available/your&lt;em&gt;app&lt;/em&gt;name.conf and open it via your favorite editor. For example&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;vim /etc/nginx/sites-available/your_app_name.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;add there this config options&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;upstream application {
+  server unix:/home/deploy/apps/APPNAME/shared/tmp/sockets/puma.sock fail_timeout=0;
+}
+
+server {
+
+  listen 80;
+
+  server_name DOMAIN;
+  root /home/deploy/apps/APPNAME/current/public;
+  try_files $uri/index.html $uri @application;
+
+  location @application {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    proxy_pass http://application;
+
+    access_log /var/log/nginx/APPNAME.access.log;
+    error_log /var/log/nginx/APPNAME.error.log;
+  }
+
+  location ~ ^/(assets|images|javascripts|stylesheets|swfs|system|uploads)/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+    add_header Last-Modified &quot;&quot;;
+    add_header ETag &quot;&quot;;
+
+    open_file_cache max=1000 inactive=500s;
+    open_file_cache_valid 600s;
+    open_file_cache_errors on;
+    break;
+  }
+
+  client_max_body_size 10M;
+  keepalive_timeout 10;
+
+  error_page 500 502 504 /500.html;
+  error_page 503 @503;
+
+  location = /50x.html {
+    root html;
+  }
+
+  location = /404.html {
+    root html;
+  }
+  location @503 {
+    error_page 405 = /system/maintenance.html;
+    if (-f $document_root/system/maintenance.html) {
+      rewrite ^(.*)$ /system/maintenance.html break;
+    }
+    rewrite ^(.*)$ /503.html break;
+  }
+  if ($request_method !~ ^(GET|HEAD|PUT|POST|DELETE|OPTIONS)$ ){
+    return 405;
+  }
+
+  if (-f $document_root/system/maintenance.html) {
+    return 503;
+  }
+
+  location ~ \.(php|html)$ {
+    return 405;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;where replace &amp;#39;your&lt;em&gt;app&lt;/em&gt;name&amp;rsquo; to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.&lt;/p&gt;
+
+&lt;p&gt;After that go to /etc/nginx/sites-enabled and create symlink to the file described below.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;cd /etc/nginx/sites-enabled
+ln -s ../sites-available/your_app_name.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And restart nginx&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  service nginx restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Set up logrotate&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  # save as /etc/logrotate.d/APPNAME
+  /home/deploy/apps/APPNAME/shared/log/*.log {
+    su deploy deploy
+    daily
+    missingok
+    rotate 30
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+  }
+
+  sudo logrotate /etc/logrotate.d/APPNAME -f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That is all. If all was correct you should see your site in the browser at http://your-machine-ip&lt;/p&gt;
+</description>
+        <pubDate>Sun, 08 Feb 2015 15:07:54 +0600</pubDate>
+        <link>http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/</link>
+        <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/</guid>
+      </item>
+    
+      <item>
+        <title>Deploying rails apps, part 2. Setting up the necessary software</title>
+        <description>&lt;p&gt;In the &lt;a href=&quot;http://bigk.me/posts/deploying-rails-apps-part-1-bootstrap-the-server/&quot;&gt;previous&lt;/a&gt; part of my articles I talk about bootstraping the server to prepare it to install neccessary software. Now we&amp;rsquo;ll install RVM, Node.js, Nginx, Ruby, Bundler and Postrgres.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-the-necessary-software&quot;&gt;Setting up the necessary software&lt;/h2&gt;
+
+&lt;p&gt;So, the next step is setting up the RVM - tool to manage the versions of gems simplier.&lt;/p&gt;
+
+&lt;p&gt;Switching to root and the first thing we uprading the versions of sofware in the repository&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  apt-get update
+  apt-get dist-upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Install some useful software we will need later:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  apt-get -y install curl git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;rvm-ruby-and-bundler-installation&quot;&gt;Rvm, ruby, and bundler installation&lt;/h3&gt;
+
+&lt;p&gt;Switch to deploy user:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  login deploy -f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And install rvm after that.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+  &lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;url -sSL https://get.rvm.io | bash -s stable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Install ruby&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  rvm install 2.1.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;or version that you prefer&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Install bundler&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  gem install bundler --no-ri --no-rdoc
+  &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; -s &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/.rvm/scripts/rvm&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; . &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/.rvm/scripts/rvm&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;node-js-installation&quot;&gt;Node.js installation.&lt;/h3&gt;
+
+&lt;p&gt;Next install Node.js -  Rails uses it to compile static assets.
+Don&amp;rsquo;t forget to switch to root or use sudo.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  add-apt-repository ppa:chris-lea/node.js
+  apt-get -y update
+  apt-get -y install nodejs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;nginx-installation&quot;&gt;Nginx installation.&lt;/h3&gt;
+
+&lt;p&gt;The next step is installing Nginx - it will serve our static requests.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  add-apt-repository ppa:nginx/stable
+  apt-get -y update
+  apt-get -y install nginx
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And start nginx:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  service nginx start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;postgresql-installation&quot;&gt;PostgreSQL installation&lt;/h3&gt;
+
+&lt;p&gt;My choice is using Postgres - it&amp;rsquo;s smart, clever and has very convenient console.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  apt-get install postgresql postgresql-contrib libpq-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;During the installation PostgreSQL created &amp;lsquo;postgres&amp;rsquo; user. So, let&amp;rsquo;s start use database console as postgres user.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  sudo -u postgres psql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the console:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  create role deploy superuser;
+  alter role deploy login;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We&amp;rsquo;ve created new database user &amp;#39;deploy&amp;rsquo;, give him superuser rights and allow him to login. This user can login but only from the localhost.&lt;/p&gt;
+
+&lt;p&gt;The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called &amp;#39;pgtune&amp;rsquo; that configure you database based on your environment.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  apt-get install pgtune
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;after that we should find postgresql.conf file to feed it to pgtune. Login to the &amp;ldquo;psql&amp;rdquo; console mentioned before and type.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  SHOW config_file;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Use &lt;code&gt;\q&lt;/code&gt; for logout, then&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  pgtune -i path/to/postgresql.conf -o path/to/postgresql.conf
+  service postgresql restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;In this section we setting up the necessary software to serve rails application. In the next section I cover how to install and configure Capistrano with Puma server and how to configure Nginx.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 08 Feb 2015 15:02:54 +0600</pubDate>
+        <link>http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/</link>
+        <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/</guid>
+      </item>
+    
+      <item>
+        <title>Deploying rails apps, part 1. Bootstrap the server</title>
+        <description>&lt;p&gt;So, deploy time is coming. If the development with rails is funny, the deployment is like a pain - you have a day by day reading articles and googling. In this series of articles I&amp;rsquo;d like to show how to deploy simple rails application using Nginx, Puma server and Capistrano.&lt;/p&gt;
+
+&lt;p&gt;The problem standing in front of me is when you setting up the server following a lot of tutorials, you do it with a necessity to type(and store) a lot of passwords - and when you do it, it&amp;rsquo;s a little bit uncomfortable.&lt;/p&gt;
+
+&lt;h2 id=&quot;bootstraping&quot;&gt;Bootstraping&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s setting up the server. My choice is DigitalOcean server but you can use any different provider. Therefore I want to deploy my application to the smallest 521MB RAM machine, my choice is 32-bit Ubuntu because it uses less memory than 64-bit version&lt;/p&gt;
+
+&lt;p&gt;During setup process I&amp;rsquo;ve added my public key from &lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt; via DigitalOcean GUI. Of cource you could implement the same via adding you public key to &lt;code&gt;/root/.ssh/authorized_keys&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;After machine created you&amp;rsquo;ll be given your new machine ip. Let&amp;rsquo;s loging in to the new server&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up&quot;&gt;Setting up&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  ssh root@&amp;lt;your new ip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After that we should create a new user that will in charge of deployment process&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  adduser deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The systems asks you the new user password and you have to type there really strong (don&amp;rsquo;t worry in the next steps we&amp;rsquo;ll pre
+vent us to type it on every sneeze via adding your public key to authorized_keys)&lt;/p&gt;
+
+&lt;p&gt;Open sudoers&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  vim /etc/sudoers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and add there&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  deploy  &lt;span class=&quot;nv&quot;&gt;ALL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;ALL&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; NOPASSWD: ALL
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you use Digital Ocean and machine with minimal configuration, don&amp;rsquo;t forget to use swap.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  dd &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/swapfile &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1k
+  mkswap /swapfile
+  swapon /swapfile
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;/swapfile       none    swap    sw      0       0 &#39;&lt;/span&gt; &amp;gt;&amp;gt; /etc/fstab
+  &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;10 | tee /proc/sys/vm/swappiness
+  &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;vm.swappiness &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 10 | tee -a /etc/sysctl.conf
+  chown root:root /swapfile
+  chmod 0600 /swapfile
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After that&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  login deploy -f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On deploy user:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  ssh-copy-id deploy@&amp;lt;your-machine-ip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;or&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  mkdir -p ~/.ssh
+  touch authorized_keys
+  vim authorized_keys
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and copy there public key from your machine and save. After that&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;  chmod 600 authorized_key
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;We created the server, created deploy user and give them an ability to simple loging in via ssh.&lt;/p&gt;
+
+&lt;p&gt;In the next chapter we&amp;rsquo;ll set up the neccessary software to our new server.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 07 Feb 2015 22:05:54 +0600</pubDate>
+        <link>http://bigk.me/rails/deployment/2015/02/07/deploying-rails-apps-part-1-bootstrap-the-server/</link>
+        <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/07/deploying-rails-apps-part-1-bootstrap-the-server/</guid>
+      </item>
+    
+  </channel>
+</rss>

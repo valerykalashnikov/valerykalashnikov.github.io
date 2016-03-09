@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Deploying rails apps, part 3. Configuring capistrano, nginx with puma &#8211; BigK's blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The third article of deployment series. Configuring capistrano, nginx  with puma">
+    <meta name="robots" content="all">
+    <meta name="author" content="Big K">
+    <meta name="keywords" content="rails, deployment">
+    <link rel="canonical" href="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201603091605" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Deploying rails apps, part 3. Configuring capistrano, nginx with puma">
+    <meta property="og:description" content="BigK&#39;s blog">
+    <meta property="og:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/">
+    <meta property="og:site_name" content="BigK&#39;s blog">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Deploying rails apps, part 3. Configuring capistrano, nginx with puma" />
+    <meta name="twitter:description" content="The third article of deployment series. Configuring capistrano, nginx  with puma" />
+    <meta name="twitter:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/" />
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://bigk.me" class="site-title">BigK's blog</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About</a>
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Deploying rails apps, part 3. Configuring capistrano, nginx with puma</h1>
+  <span class="post-meta">Feb 8, 2015</span><br>
+  
+  <span class="post-meta small">
+  
+    4 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/">previous</a> article we&rsquo;ve set up the necessary soft for our rails application. In this article we&rsquo;ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.</p>
+
+<h2 id="capistrano">Capistrano</h2>
+
+<p>To the Gemfile of your application add this lines or neccessary gems, mentioned below:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  gem 'puma'
+</code></pre></div>
+<p>and</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  group :development do
+
+    gem 'capistrano'
+    gem 'capistrano-rails'
+    gem 'capistrano-bundler'
+    gem 'capistrano-rvm'
+    gem 'capistrano3-puma'
+
+  end
+</code></pre></div>
+<p>I like puma in development because it&rsquo;s better than Webrick. But if you like something different (like <a href="http://pow.cx/">pow</a>) in development add &lsquo;puma&rsquo; gem to :production section.</p>
+
+<p>After that:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  bundle install
+  cap install
+</code></pre></div>
+<p>To the new Capfile add</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  require 'capistrano/rvm'
+  require 'capistrano/bundler'
+  require 'capistrano/rails/assets'
+  require 'capistrano/rails/migrations'
+  require 'capistrano/puma'
+</code></pre></div>
+<p>To config/deploy.rb modify this strings:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  set :application, 'your_application_name'
+  set :repo_url, 'your repository_url'
+
+  set :deploy_user, 'deploy'
+
+  set :deploy_to, "/home/#{fetch :deploy_user}/apps/#{fetch :application}"
+
+  set :rvm_ruby_version,  '2.x.x@your_gemset --create'
+</code></pre></div>
+<p>And set linked files and dirs after that. Linked dirs or files - its files and directories that necessary for the project but not  designated to store in your repository. For example config files like database.yml, and folders like vendor/bundle, log, public/uploads (if you use something like CarrierWave to crop photos). This files have to be in a &#39;shared&rsquo; folder and each release should contain only symlinks for that otherwise it won&rsquo;t appear in the next release (because that is not presented in the repository)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  set :linked_files, fetch(:linked_files, []).push('.env', 'config/you_first_config.yml', 'your_second_config')
+  set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'another_folder')
+</code></pre></div>
+<p>For the security reasons you should store your configuration values such &#39;secret<em>key</em>base&rsquo;, postgres username and password, different oauth client<em>id and client</em>secrets in environment variables. So, add to your Gemfile</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  gem 'dotenv-rails'
+  bundle install
+</code></pre></div>
+<p>add
+<code>
+.env
+</code></p>
+
+<p>to your .gitignore file and create .env.example with example parameters in the root of the repository (you should store this file in the remote repository)</p>
+
+<p>And another one - you should have file config/environments/production.rb. The rails default installation contains this file and I suppose that you know or can uderstand this options. If not you should met with <a href="http://guides.rubyonrails.org/configuring.html">configuring</a> rails applications.</p>
+
+<p>After that we should deploy the project the first time we will get the <strong>error</strong>. Don&rsquo;t worry, for now it&rsquo;s okey.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  cap production deploy
+</code></pre></div>
+<p>Add to config/deploy/production.rb</p>
+<div class="highlight"><pre><code class="language-" data-lang="">role :app, %w{deploy@your-host-machine-ip}
+role :web, %w{deploy@your-host-machine-ip}
+role :db,  %w{deploy@your-host-machine-ip}
+</code></pre></div>
+<p>Then ssh to your server as deploy user, go to ~/apps/your<em>app</em>folder/shared and create .env file with your very secret values(for syntax and more see <a href="https://github.com/bkeepers/dotenv">.env</a>).
+Don&rsquo;t forget to create in shared folder files linked before (yes, that files and folders mentioned in <code>set :linked_files</code>). So, your config files for example like secrets.yml, sidekiq.yml and others should be in ~/apps/your<em>app</em>folder/shared/config</p>
+
+<p>After you do it, run again</p>
+<div class="highlight"><pre><code class="language-" data-lang=""> cap production deploy
+</code></pre></div>
+<p>If your need to stop/start puma, use</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  cap production puma:start
+  cap production puma:stop
+</code></pre></div>
+<p>Okey, it&rsquo;s time to configure Nginx</p>
+
+<p>Login as root and create file /etc/nginx/sites-available/your<em>app</em>name.conf and open it via your favorite editor. For example</p>
+<div class="highlight"><pre><code class="language-" data-lang="">vim /etc/nginx/sites-available/your_app_name.conf
+</code></pre></div>
+<p>add there this config options</p>
+<div class="highlight"><pre><code class="language-" data-lang="">upstream application {
+  server unix:/home/deploy/apps/APPNAME/shared/tmp/sockets/puma.sock fail_timeout=0;
+}
+
+server {
+
+  listen 80;
+
+  server_name DOMAIN;
+  root /home/deploy/apps/APPNAME/current/public;
+  try_files $uri/index.html $uri @application;
+
+  location @application {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    proxy_pass http://application;
+
+    access_log /var/log/nginx/APPNAME.access.log;
+    error_log /var/log/nginx/APPNAME.error.log;
+  }
+
+  location ~ ^/(assets|images|javascripts|stylesheets|swfs|system|uploads)/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+    add_header Last-Modified "";
+    add_header ETag "";
+
+    open_file_cache max=1000 inactive=500s;
+    open_file_cache_valid 600s;
+    open_file_cache_errors on;
+    break;
+  }
+
+  client_max_body_size 10M;
+  keepalive_timeout 10;
+
+  error_page 500 502 504 /500.html;
+  error_page 503 @503;
+
+  location = /50x.html {
+    root html;
+  }
+
+  location = /404.html {
+    root html;
+  }
+  location @503 {
+    error_page 405 = /system/maintenance.html;
+    if (-f $document_root/system/maintenance.html) {
+      rewrite ^(.*)$ /system/maintenance.html break;
+    }
+    rewrite ^(.*)$ /503.html break;
+  }
+  if ($request_method !~ ^(GET|HEAD|PUT|POST|DELETE|OPTIONS)$ ){
+    return 405;
+  }
+
+  if (-f $document_root/system/maintenance.html) {
+    return 503;
+  }
+
+  location ~ \.(php|html)$ {
+    return 405;
+  }
+}
+</code></pre></div>
+<p>where replace &#39;your<em>app</em>name&rsquo; to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.</p>
+
+<p>After that go to /etc/nginx/sites-enabled and create symlink to the file described below.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">cd /etc/nginx/sites-enabled
+ln -s ../sites-available/your_app_name.conf
+</code></pre></div>
+<p>And restart nginx</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  service nginx restart
+</code></pre></div>
+<p>Set up logrotate</p>
+<div class="highlight"><pre><code class="language-" data-lang="">  # save as /etc/logrotate.d/APPNAME
+  /home/deploy/apps/APPNAME/shared/log/*.log {
+    su deploy deploy
+    daily
+    missingok
+    rotate 30
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+  }
+
+  sudo logrotate /etc/logrotate.d/APPNAME -f
+</code></pre></div>
+<p>That is all. If all was correct you should see your site in the browser at http://your-machine-ip</p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <small>
+      Powered by <a href="http://pixyll.com/">Pixyll theme</a> and <a href="https://jekyllrb.com//">jekyll</a>
+    </small>
+  </div>
+</footer>
+
+</body>
+</html>
