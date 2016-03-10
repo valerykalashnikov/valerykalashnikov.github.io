@@ -22,34 +22,34 @@ After machine created you'll be given your new machine ip. Let's loging in to th
 
 ## Setting up
 
-```bash
+~~~bash
   ssh root@<your new ip>
-```
+~~~
 
 After that we should create a new user that will in charge of deployment process
 
-``` bash
+~~~ bash
   adduser deploy
-```
+~~~
 
 The systems asks you the new user password and you have to type there really strong (don't worry in the next steps we'll pre
 vent us to type it on every sneeze via adding your public key to authorized_keys)
 
 Open sudoers
 
-```bash
+~~~bash
   vim /etc/sudoers
-```
+~~~
 
 and add there
 
-```bash
+~~~bash
   deploy  ALL=(ALL) NOPASSWD: ALL
-```
+~~~
 
 If you use Digital Ocean and machine with minimal configuration, don't forget to use swap.
 
-```bash
+~~~bash
   dd if=/dev/zero of=/swapfile bs=1M count=1k
   mkswap /swapfile
   swapon /swapfile
@@ -59,34 +59,34 @@ If you use Digital Ocean and machine with minimal configuration, don't forget to
   chown root:root /swapfile
   chmod 0600 /swapfile
 
-```
+~~~
 
 After that
 
-```bash
+~~~bash
   login deploy -f
-```
+~~~
 
 
 On deploy user:
 
-```bash
+~~~bash
   ssh-copy-id deploy@<your-machine-ip>
-```
+~~~
 
 or
 
-```bash
+~~~bash
   mkdir -p ~/.ssh
   touch authorized_keys
   vim authorized_keys
-```
+~~~
 
 and copy there public key from your machine and save. After that
 
-```bash
+~~~bash
   chmod 600 authorized_key
-```
+~~~
 
 ## Summary
 

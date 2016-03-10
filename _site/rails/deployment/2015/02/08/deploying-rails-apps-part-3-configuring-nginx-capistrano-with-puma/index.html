@@ -13,7 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201603091605" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201603101723" type="text/css">
 
     <!-- Fonts -->
     
@@ -108,15 +108,18 @@
 </div>
 
 <article class="post-content">
-  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/">previous</a> article we&rsquo;ve set up the necessary soft for our rails application. In this article we&rsquo;ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.</p>
+  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/">previous</a> article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.</p>
 
 <h2 id="capistrano">Capistrano</h2>
 
 <p>To the Gemfile of your application add this lines or neccessary gems, mentioned below:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  gem 'puma'
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  gem 'puma'
+</code></pre>
+</div>
 <p>and</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  group :development do
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  group :development do
 
     gem 'capistrano'
     gem 'capistrano-rails'
@@ -125,22 +128,31 @@
     gem 'capistrano3-puma'
 
   end
-</code></pre></div>
-<p>I like puma in development because it&rsquo;s better than Webrick. But if you like something different (like <a href="http://pow.cx/">pow</a>) in development add &lsquo;puma&rsquo; gem to :production section.</p>
+</code></pre>
+</div>
+
+<p>I like puma in development because it’s better than Webrick. But if you like something different (like <a href="http://pow.cx/">pow</a>) in development add ‘puma’ gem to :production section.</p>
 
 <p>After that:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  bundle install
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  bundle install
   cap install
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>To the new Capfile add</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  require 'capistrano/rvm'
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  require 'capistrano/rvm'
   require 'capistrano/bundler'
   require 'capistrano/rails/assets'
   require 'capistrano/rails/migrations'
   require 'capistrano/puma'
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>To config/deploy.rb modify this strings:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  set :application, 'your_application_name'
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  set :application, 'your_application_name'
   set :repo_url, 'your repository_url'
 
   set :deploy_user, 'deploy'
@@ -148,49 +160,72 @@
   set :deploy_to, "/home/#{fetch :deploy_user}/apps/#{fetch :application}"
 
   set :rvm_ruby_version,  '2.x.x@your_gemset --create'
-</code></pre></div>
-<p>And set linked files and dirs after that. Linked dirs or files - its files and directories that necessary for the project but not  designated to store in your repository. For example config files like database.yml, and folders like vendor/bundle, log, public/uploads (if you use something like CarrierWave to crop photos). This files have to be in a &#39;shared&rsquo; folder and each release should contain only symlinks for that otherwise it won&rsquo;t appear in the next release (because that is not presented in the repository)</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  set :linked_files, fetch(:linked_files, []).push('.env', 'config/you_first_config.yml', 'your_second_config')
+</code></pre>
+</div>
+
+<p>And set linked files and dirs after that. Linked dirs or files - its files and directories that necessary for the project but not  designated to store in your repository. For example config files like database.yml, and folders like vendor/bundle, log, public/uploads (if you use something like CarrierWave to crop photos). This files have to be in a ‘shared’ folder and each release should contain only symlinks for that otherwise it won’t appear in the next release (because that is not presented in the repository)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  set :linked_files, fetch(:linked_files, []).push('.env', 'config/you_first_config.yml', 'your_second_config')
   set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'another_folder')
-</code></pre></div>
-<p>For the security reasons you should store your configuration values such &#39;secret<em>key</em>base&rsquo;, postgres username and password, different oauth client<em>id and client</em>secrets in environment variables. So, add to your Gemfile</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  gem 'dotenv-rails'
+</code></pre>
+</div>
+
+<p>For the security reasons you should store your configuration values such ‘secret_key_base’, postgres username and password, different oauth client_id and client_secrets in environment variables. So, add to your Gemfile</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  gem 'dotenv-rails'
   bundle install
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>add
-<code>
+~~~
 .env
-</code></p>
+~~~</p>
 
 <p>to your .gitignore file and create .env.example with example parameters in the root of the repository (you should store this file in the remote repository)</p>
 
 <p>And another one - you should have file config/environments/production.rb. The rails default installation contains this file and I suppose that you know or can uderstand this options. If not you should met with <a href="http://guides.rubyonrails.org/configuring.html">configuring</a> rails applications.</p>
 
-<p>After that we should deploy the project the first time we will get the <strong>error</strong>. Don&rsquo;t worry, for now it&rsquo;s okey.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  cap production deploy
-</code></pre></div>
+<p>After that we should deploy the project the first time we will get the <strong>error</strong>. Don’t worry, for now it’s okey.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  cap production deploy
+</code></pre>
+</div>
 <p>Add to config/deploy/production.rb</p>
-<div class="highlight"><pre><code class="language-" data-lang="">role :app, %w{deploy@your-host-machine-ip}
+
+<div class="highlighter-rouge"><pre class="highlight"><code>role :app, %w{deploy@your-host-machine-ip}
 role :web, %w{deploy@your-host-machine-ip}
 role :db,  %w{deploy@your-host-machine-ip}
-</code></pre></div>
-<p>Then ssh to your server as deploy user, go to ~/apps/your<em>app</em>folder/shared and create .env file with your very secret values(for syntax and more see <a href="https://github.com/bkeepers/dotenv">.env</a>).
-Don&rsquo;t forget to create in shared folder files linked before (yes, that files and folders mentioned in <code>set :linked_files</code>). So, your config files for example like secrets.yml, sidekiq.yml and others should be in ~/apps/your<em>app</em>folder/shared/config</p>
+</code></pre>
+</div>
+
+<p>Then ssh to your server as deploy user, go to ~/apps/your_app_folder/shared and create .env file with your very secret values(for syntax and more see <a href="https://github.com/bkeepers/dotenv">.env</a>).
+Don’t forget to create in shared folder files linked before (yes, that files and folders mentioned in ~~~set :linked_files~~~). So, your config files for example like secrets.yml, sidekiq.yml and others should be in ~/apps/your_app_folder/shared/config</p>
 
 <p>After you do it, run again</p>
-<div class="highlight"><pre><code class="language-" data-lang=""> cap production deploy
-</code></pre></div>
-<p>If your need to stop/start puma, use</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  cap production puma:start
-  cap production puma:stop
-</code></pre></div>
-<p>Okey, it&rsquo;s time to configure Nginx</p>
 
-<p>Login as root and create file /etc/nginx/sites-available/your<em>app</em>name.conf and open it via your favorite editor. For example</p>
-<div class="highlight"><pre><code class="language-" data-lang="">vim /etc/nginx/sites-available/your_app_name.conf
-</code></pre></div>
+<div class="highlighter-rouge"><pre class="highlight"><code> cap production deploy
+</code></pre>
+</div>
+
+<p>If your need to stop/start puma, use</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  cap production puma:start
+  cap production puma:stop
+</code></pre>
+</div>
+
+<p>Okey, it’s time to configure Nginx</p>
+
+<p>Login as root and create file /etc/nginx/sites-available/your_app_name.conf and open it via your favorite editor. For example</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>vim /etc/nginx/sites-available/your_app_name.conf
+</code></pre>
+</div>
+
 <p>add there this config options</p>
-<div class="highlight"><pre><code class="language-" data-lang="">upstream application {
+
+<div class="highlighter-rouge"><pre class="highlight"><code>upstream application {
   server unix:/home/deploy/apps/APPNAME/shared/tmp/sockets/puma.sock fail_timeout=0;
 }
 
@@ -258,18 +293,26 @@ server {
     return 405;
   }
 }
-</code></pre></div>
-<p>where replace &#39;your<em>app</em>name&rsquo; to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.</p>
+</code></pre>
+</div>
+
+<p>where replace ‘your_app_name’ to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.</p>
 
 <p>After that go to /etc/nginx/sites-enabled and create symlink to the file described below.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">cd /etc/nginx/sites-enabled
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd /etc/nginx/sites-enabled
 ln -s ../sites-available/your_app_name.conf
-</code></pre></div>
+</code></pre>
+</div>
 <p>And restart nginx</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  service nginx restart
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  service nginx restart
+</code></pre>
+</div>
+
 <p>Set up logrotate</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  # save as /etc/logrotate.d/APPNAME
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  # save as /etc/logrotate.d/APPNAME
   /home/deploy/apps/APPNAME/shared/log/*.log {
     su deploy deploy
     daily
@@ -282,8 +325,11 @@ ln -s ../sites-available/your_app_name.conf
   }
 
   sudo logrotate /etc/logrotate.d/APPNAME -f
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>That is all. If all was correct you should see your site in the browser at http://your-machine-ip</p>
+
 
 </article>
 

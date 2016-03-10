@@ -13,7 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201603091605" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201603101723" type="text/css">
 
     <!-- Fonts -->
     
@@ -108,35 +108,48 @@
 </div>
 
 <article class="post-content">
-  <p>So, deploy time is coming. If the development with rails is funny, the deployment is like a pain - you have a day by day reading articles and googling. In this series of articles I&rsquo;d like to show how to deploy simple rails application using Nginx, Puma server and Capistrano.</p>
+  <p>So, deploy time is coming. If the development with rails is funny, the deployment is like a pain - you have a day by day reading articles and googling. In this series of articles I’d like to show how to deploy simple rails application using Nginx, Puma server and Capistrano.</p>
 
-<p>The problem standing in front of me is when you setting up the server following a lot of tutorials, you do it with a necessity to type(and store) a lot of passwords - and when you do it, it&rsquo;s a little bit uncomfortable.</p>
+<p>The problem standing in front of me is when you setting up the server following a lot of tutorials, you do it with a necessity to type(and store) a lot of passwords - and when you do it, it’s a little bit uncomfortable.</p>
 
 <h2 id="bootstraping">Bootstraping</h2>
 
-<p>Let&rsquo;s setting up the server. My choice is DigitalOcean server but you can use any different provider. Therefore I want to deploy my application to the smallest 521MB RAM machine, my choice is 32-bit Ubuntu because it uses less memory than 64-bit version</p>
+<p>Let’s setting up the server. My choice is DigitalOcean server but you can use any different provider. Therefore I want to deploy my application to the smallest 521MB RAM machine, my choice is 32-bit Ubuntu because it uses less memory than 64-bit version</p>
 
-<p>During setup process I&rsquo;ve added my public key from <code>~/.ssh/id_rsa.pub</code> via DigitalOcean GUI. Of cource you could implement the same via adding you public key to <code>/root/.ssh/authorized_keys</code></p>
+<p>During setup process I’ve added my public key from <code class="highlighter-rouge">~/.ssh/id_rsa.pub</code> via DigitalOcean GUI. Of cource you could implement the same via adding you public key to <code class="highlighter-rouge">/root/.ssh/authorized_keys</code></p>
 
-<p>After machine created you&rsquo;ll be given your new machine ip. Let&rsquo;s loging in to the new server</p>
+<p>After machine created you’ll be given your new machine ip. Let’s loging in to the new server</p>
 
 <h2 id="setting-up">Setting up</h2>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  ssh root@&lt;your new ip&gt;
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  ssh root@&lt;your new ip&gt;
+</code></pre>
+</div>
+
 <p>After that we should create a new user that will in charge of deployment process</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  adduser deploy
-</code></pre></div>
-<p>The systems asks you the new user password and you have to type there really strong (don&rsquo;t worry in the next steps we&rsquo;ll pre
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  adduser deploy
+</code></pre>
+</div>
+
+<p>The systems asks you the new user password and you have to type there really strong (don’t worry in the next steps we’ll pre
 vent us to type it on every sneeze via adding your public key to authorized_keys)</p>
 
 <p>Open sudoers</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  vim /etc/sudoers
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  vim /etc/sudoers
+</code></pre>
+</div>
+
 <p>and add there</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  deploy  <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: ALL
-</code></pre></div>
-<p>If you use Digital Ocean and machine with minimal configuration, don&rsquo;t forget to use swap.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span>/swapfile <span class="nv">bs</span><span class="o">=</span>1M <span class="nv">count</span><span class="o">=</span>1k
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  deploy  <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+</code></pre>
+</div>
+
+<p>If you use Digital Ocean and machine with minimal configuration, don’t forget to use swap.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span>/swapfile <span class="nv">bs</span><span class="o">=</span>1M <span class="nv">count</span><span class="o">=</span>1k
   mkswap /swapfile
   swapon /swapfile
   <span class="nb">echo</span> <span class="s1">'/swapfile       none    swap    sw      0       0 '</span> &gt;&gt; /etc/fstab
@@ -145,26 +158,40 @@ vent us to type it on every sneeze via adding your public key to authorized_keys
   chown root:root /swapfile
   chmod 0600 /swapfile
 
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>After that</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  login deploy -f
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  login deploy -f
+</code></pre>
+</div>
+
 <p>On deploy user:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  ssh-copy-id deploy@&lt;your-machine-ip&gt;
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  ssh-copy-id deploy@&lt;your-machine-ip&gt;
+</code></pre>
+</div>
+
 <p>or</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  mkdir -p ~/.ssh
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  mkdir -p ~/.ssh
   touch authorized_keys
   vim authorized_keys
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>and copy there public key from your machine and save. After that</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  chmod 600 authorized_key
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  chmod 600 authorized_key
+</code></pre>
+</div>
+
 <h2 id="summary">Summary</h2>
 
 <p>We created the server, created deploy user and give them an ability to simple loging in via ssh.</p>
 
-<p>In the next chapter we&rsquo;ll set up the neccessary software to our new server.</p>
+<p>In the next chapter we’ll set up the neccessary software to our new server.</p>
 
 </article>
 

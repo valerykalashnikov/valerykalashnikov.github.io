@@ -13,7 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201603091605" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201603101723" type="text/css">
 
     <!-- Fonts -->
     
@@ -108,81 +108,125 @@
 </div>
 
 <article class="post-content">
-  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-1-bootstrap-the-server/">previous</a> part of my articles I talk about bootstraping the server to prepare it to install neccessary software. Now we&rsquo;ll install RVM, Node.js, Nginx, Ruby, Bundler and Postrgres.</p>
+  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-1-bootstrap-the-server/">previous</a> part of my articles I talk about bootstraping the server to prepare it to install neccessary software. Now we’ll install RVM, Node.js, Nginx, Ruby, Bundler and Postrgres.</p>
 
 <h2 id="setting-up-the-necessary-software">Setting up the necessary software</h2>
 
 <p>So, the next step is setting up the RVM - tool to manage the versions of gems simplier.</p>
 
 <p>Switching to root and the first thing we uprading the versions of sofware in the repository</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get update
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  apt-get update
   apt-get dist-upgrade
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>Install some useful software we will need later:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get -y install curl git
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  apt-get -y install curl git
+</code></pre>
+</div>
+
 <h3 id="rvm-ruby-and-bundler-installation">Rvm, ruby, and bundler installation</h3>
 
 <p>Switch to deploy user:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  login deploy -f
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  login deploy -f
+</code></pre>
+</div>
+
 <p>And install rvm after that.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
   <span class="se">\c</span>url -sSL https://get.rvm.io | bash -s stable
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>Install ruby</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  rvm install 2.1.1 <span class="o">(</span>or version that you prefer<span class="o">)</span>
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  rvm install 2.1.1 <span class="o">(</span>or version that you prefer<span class="o">)</span>
+</code></pre>
+</div>
+
 <p>Install bundler</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  gem install bundler --no-ri --no-rdoc
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  gem install bundler --no-ri --no-rdoc
   <span class="o">[[</span> -s <span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.rvm/scripts/rvm"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> . <span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.rvm/scripts/rvm"</span>
-</code></pre></div>
-<h3 id="node-js-installation">Node.js installation.</h3>
+</code></pre>
+</div>
+
+<h3 id="nodejs-installation">Node.js installation.</h3>
 
 <p>Next install Node.js -  Rails uses it to compile static assets.
-Don&rsquo;t forget to switch to root or use sudo.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  add-apt-repository ppa:chris-lea/node.js
+Don’t forget to switch to root or use sudo.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  add-apt-repository ppa:chris-lea/node.js
   apt-get -y update
   apt-get -y install nodejs
-</code></pre></div>
+</code></pre>
+</div>
+
 <h3 id="nginx-installation">Nginx installation.</h3>
 
 <p>The next step is installing Nginx - it will serve our static requests.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  add-apt-repository ppa:nginx/stable
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  add-apt-repository ppa:nginx/stable
   apt-get -y update
   apt-get -y install nginx
 
-</code></pre></div>
+</code></pre>
+</div>
 <p>And start nginx:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  service nginx start
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  service nginx start
+</code></pre>
+</div>
+
 <h3 id="postgresql-installation">PostgreSQL installation</h3>
 
-<p>My choice is using Postgres - it&rsquo;s smart, clever and has very convenient console.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get install postgresql postgresql-contrib libpq-dev
-</code></pre></div>
-<p>During the installation PostgreSQL created &lsquo;postgres&rsquo; user. So, let&rsquo;s start use database console as postgres user.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  sudo -u postgres psql
-</code></pre></div>
-<p>In the console:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  create role deploy superuser;
-  alter role deploy login;
-</code></pre></div>
-<p>We&rsquo;ve created new database user &#39;deploy&rsquo;, give him superuser rights and allow him to login. This user can login but only from the localhost.</p>
+<p>My choice is using Postgres - it’s smart, clever and has very convenient console.</p>
 
-<p>The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called &#39;pgtune&rsquo; that configure you database based on your environment.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  apt-get install pgtune
-</code></pre></div>
-<p>after that we should find postgresql.conf file to feed it to pgtune. Login to the &ldquo;psql&rdquo; console mentioned before and type.</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">  SHOW config_file;
-</code></pre></div>
-<p>Use <code>\q</code> for logout, then</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  pgtune -i path/to/postgresql.conf -o path/to/postgresql.conf
+<div class="highlighter-rouge"><pre class="highlight"><code>  apt-get install postgresql postgresql-contrib libpq-dev
+</code></pre>
+</div>
+
+<p>During the installation PostgreSQL created ‘postgres’ user. So, let’s start use database console as postgres user.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  sudo -u postgres psql
+</code></pre>
+</div>
+
+<p>In the console:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  create role deploy superuser;
+  alter role deploy login;
+</code></pre>
+</div>
+<p>We’ve created new database user ‘deploy’, give him superuser rights and allow him to login. This user can login but only from the localhost.</p>
+
+<p>The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called ‘pgtune’ that configure you database based on your environment.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  apt-get install pgtune
+</code></pre>
+</div>
+
+<p>after that we should find postgresql.conf file to feed it to pgtune. Login to the “psql” console mentioned before and type.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  SHOW config_file;
+</code></pre>
+</div>
+
+<p>Use <code class="highlighter-rouge">\q</code> for logout, then</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  pgtune -i path/to/postgresql.conf -o path/to/postgresql.conf
   service postgresql restart
-</code></pre></div>
+</code></pre>
+</div>
+
 <h2 id="summary">Summary</h2>
 
 <p>In this section we setting up the necessary software to serve rails application. In the next section I cover how to install and configure Capistrano with Puma server and how to configure Nginx.</p>
+
 
 </article>
 
