@@ -22,8 +22,8 @@ Implement all this logic in views would be like a noodles, so it will be better 
           this.data = data;
 
           return {
-              avatarUrl: this.avatarUrl(),
-              fullName: this.findChannel('sms')
+              avatarUrl: this.avatarUrl(32),
+              fullName: this.fullName()
           }
 
       }
