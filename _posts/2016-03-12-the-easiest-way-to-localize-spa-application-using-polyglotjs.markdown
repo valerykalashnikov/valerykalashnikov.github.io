@@ -6,9 +6,9 @@ categories: javascript
 ---
 
 
-For a long time ago when I was a teenager with long black hair excited with new Flash page, there wasn't such question like web page localization with JavaScript. Indeed, there weren't any JavaScript-intensive pages to localize.
+For a long time ago when I was a teenager with long black hair excited with new Flash page, there wasn't such thing like web page localization with JavaScript. Indeed, there weren't any JavaScript-intensive pages to localize.
 
-But at the age where JavaScript got triumph and each student make their own framework you can be encountered with such question.
+But at the age where JavaScript got triumph and each kid makes their own framework you can be encountered with such question.
 
 Firstly, your should google and find library to localize your application. I found [polyglot.js](http://airbnb.io/polyglot.js/) but your can find something similar.
 
@@ -22,7 +22,7 @@ Then create your_locale.json file in js/locale directory (or something elswhere)
 }
 ~~~
 
-Then include the code below somewhere you want
+Next include the code below somewhere you want
 
 ~~~javascript
   //Obtain locale from somewhere (cookie, localstorage, url ...)
@@ -45,7 +45,7 @@ That's great but we have to use it in our favourite template engine preferably w
   );
 ~~~
 
-Then we can use it in our templates files like this
+Now we can use it in our templates files like this
 
 ~~~html
   <a href="/sign_in" class="sign-in">{% raw %}{{t 'sign_in'}}{% endraw %}</a>
