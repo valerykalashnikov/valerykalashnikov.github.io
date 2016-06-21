@@ -6,11 +6,11 @@ summary: "The third article of deployment series. Configuring capistrano, nginx 
 categories: rails deployment
 ---
 
-In the [previous](http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/) article we've set up the necessary soft for our rails application. In this article we'll meet wit Capistrano, configuring Nginx and Puma server and logrotate.
+In the [previous](http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/) article we've set up the necessary soft for our rails application. In this article we'll meet wit Capistrano, configure Nginx and Puma server and logrotate.
 
 ## Capistrano
 
-To the Gemfile of your application add this lines or neccessary gems, mentioned below:
+Add this lines or neccessary gems to the Gemfile of your application, mentioned below:
 
 ~~~
   gem 'puma'

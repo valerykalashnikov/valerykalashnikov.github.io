@@ -78,6 +78,7 @@ or
 
 ~~~bash
   mkdir -p ~/.ssh
+  cd .ssh
   touch authorized_keys
   vim authorized_keys
 ~~~

@@ -91,7 +91,7 @@ My choice is using Postgres - it's smart, clever and has very convenient console
   apt-get install postgresql postgresql-contrib libpq-dev
 ~~~
 
-During the installation PostgreSQL created 'postgres' user. So, let's start use database console as postgres user.
+During the installation PostgreSQL created 'postgres' user. So, let's start to use database console as postgres user.
 
 ~~~bash
   sudo -u postgres psql
@@ -103,9 +103,9 @@ In the console:
   create role deploy superuser;
   alter role deploy login;
 ~~~
-We've created new database user 'deploy', give him superuser rights and allow him to login. This user can login but only from the localhost.
+We've created new database user 'deploy', gave him superuser rights and allowed him to login. This user can login but only from the localhost.
 
-The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called 'pgtune' that configure you database based on your environment.
+The good way is not to use postgresql default config postgresql.conf. If you are not Postgres-guru you can set up the special tool called 'pgtune' that configures you database based on your environment.
 
 ~~~bash
   apt-get install pgtune
