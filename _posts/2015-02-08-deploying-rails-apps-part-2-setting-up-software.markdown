@@ -41,6 +41,8 @@ And install rvm after that.
   \curl -sSL https://get.rvm.io | bash -s stable
 ~~~
 
+Don't forget to reload your shell to use rvm command.
+
 Install ruby
 
 ~~~bash
