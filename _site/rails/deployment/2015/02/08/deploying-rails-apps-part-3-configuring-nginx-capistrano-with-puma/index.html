@@ -227,7 +227,7 @@ Don’t forget to create in shared folder files linked before (yes, that files a
 </code></pre>
 </div>
 
-<p>add there this config options</p>
+<p>add these config options</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>upstream application {
   server unix:/home/deploy/apps/APPNAME/shared/tmp/sockets/puma.sock fail_timeout=0;
@@ -300,7 +300,7 @@ server {
 </code></pre>
 </div>
 
-<p>where replace ‘your_app_name’ to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.</p>
+<p>where replace ‘your_app_name’ to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the deployment problem I didn't want to know what means each line of this config.</p>
 
 <p>After that go to /etc/nginx/sites-enabled and create symlink to the file described below.</p>
 
