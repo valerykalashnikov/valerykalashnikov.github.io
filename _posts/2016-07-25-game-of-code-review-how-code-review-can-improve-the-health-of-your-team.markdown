@@ -75,7 +75,7 @@ We believe that the mission of every developer is to look after his code, and we
 
 With BlameWarrior you can:
 
-  1. “Attack” the author of the code by discussing their changes. We rely on “The Random Almighty” that will help you to pick a reviewer from your collaborators.
+  1. “Attack” the author of the code by discussing their changes. The "Random Almighty" will pick and assign a reviewer every time you open a new PR.
   2. “Defend” your technical decisions and get rewarded for the every line you have changed and advocated. The bigger the pull request, the bigger the reward you get.
   3. Be perpetuated in the Hall of Fame and obtain awards blessed by the Allpowered Gods.
 
