@@ -5,10 +5,11 @@ date: "2016-07-25 12:58:05"
 categories: githubflow codereview
 ---
 
-
 In fact code review process is a part of agile workflow when developers can spread their skillset across of the team making them more self-organized and responsible. It allows the team to learn better the code base, explore new technologies and gives an overview of a project, which means everyone knows what happens in the whole project not only the code one owns.
 
 ## So, what is code review?
+
+![code review image](https://valerykalashnikov.github.io/images/code_review.png)
 
 When you’re done with implementing your feature, another developer goes through your code and asks:
 

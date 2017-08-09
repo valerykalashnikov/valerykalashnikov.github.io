@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Game of Code Review. How code review can improve the health of your team &#8211; BigK's blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BigK&#39;s blog">
+    <meta name="robots" content="all">
+    <meta name="author" content="Big K">
+    <meta name="keywords" content="development, github, githubflow">
+    <link rel="canonical" href="http://bigk.me/development/github/githubflow/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201607311240" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Game of Code Review. How code review can improve the health of your team">
+    <meta property="og:description" content="BigK&#39;s blog">
+    <meta property="og:url" content="http://bigk.me/development/github/githubflow/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/">
+    <meta property="og:site_name" content="BigK&#39;s blog">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Game of Code Review. How code review can improve the health of your team" />
+    <meta name="twitter:description" content="BigK's blog" />
+    <meta name="twitter:url" content="http://bigk.me/development/github/githubflow/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/" />
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://bigk.me" class="site-title">BigK's blog</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Game of Code Review. How code review can improve the health of your team</h1>
+  <span class="post-meta">Jul 25, 2016</span><br>
+  
+  <span class="post-meta small">
+  
+    5 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <p>In fact code review process is a part of agile workflow when developers can spread their skillset across of the team making them more self-organized and responsible. It allows the team to learn better the code base, explore new technologies and gives an overview of a project, which means everyone knows what happens in the whole project not only the code one owns.</p>
+
+<h2 id="so-what-is-code-review">So, what is code review?</h2>
+
+<p>When you’re done with implementing your feature, another developer goes through your code and asks:</p>
+
+<ul>
+  <li>If all cases are implemented</li>
+  <li>If the new code is well-tested</li>
+  <li>If there are any errors in the code</li>
+  <li>If the new code matches the existing best practices and guidelines</li>
+</ul>
+
+<p>Feature should be accepted once and only all of the above requirements are passed.</p>
+
+<p>In this article we will not discuss types of code review such using separate email thread, chat or pair programming. All of us did it and nobody likes smiles substituting the commas, colons and parenthesis in the code.</p>
+
+<h2 id="why-does-it-matter">Why does it matter?</h2>
+
+<h3 id="sharing-the-knowledge">Sharing the knowledge</h3>
+
+<p>As we said, it spreads the knowledge. There aren’t any person who knows only a specific part of the codebase. This implies you can go to vacation and just take a rest without being disturbed by phone calls and emails from the team.</p>
+
+<h3 id="estimation">Estimation</h3>
+<p>Everybody knows estimation problems and it hurts in most cases. During code review, the author and reviewer know everything about time spent for the feature. They can provide a good feedback and use special arguments during meetings and brainstorms improving the quality of further estimation.</p>
+
+<h3 id="discipline">Discipline</h3>
+<p>By preparing new feature to review, developers get used to make a separate branch for a new feature, then open pull requests, assign it and waiting for a review. Also this means no pushes to master anymore. Your code becomes nicer and cleaner and developers are more disciplined and happy because they like the code they did.</p>
+
+<h3 id="communication">Communication</h3>
+<p>The strong team is a team with strong communicative skills. A mess in the code, in the organization process and in entire life is based on miscommunication.
+But… not every developer likes corporate parties with drinks and funny competitions, however everybody know that a good developer is the one who likes to code.
+During the reviewing process developers talk about what they like the most and make their own contests - code review contests.
+At <a href="http://blamewarrior.com">BlameWarrior</a> we’re trying to help developers to make their own contests and to grow the discipline using code reviews, but firstly we have to say some words about code review problems.</p>
+
+<h2 id="code-review-problems">Code review problems</h2>
+<p>Here are the common issues we experienced while reviewing someone’s code:</p>
+
+<ul>
+  <li>Who do they think they are to consider themselves better than me and tell me that this is bad design? It works!</li>
+  <li>Why do I have to review the mess written by a new junior developer instead of implementing a new rocket-science feature?</li>
+  <li>I don’t know who will responsible for that pull request. I’ll just leave it here… for a month… or maybe a year.</li>
+  <li>Dude, sorry, I forgot about your pull request, I’ll review it, seriously.</li>
+  <li>Sorry boss, we forgot to accept his pull request, we’ll need some more time now to review it and merge, you know…</li>
+</ul>
+
+<h2 id="crush-your-code-review-problems-with-the-fist-of-blamewarrior">Crush your code review problems with the fist of BlameWarrior</h2>
+
+<p>We have to admit, although people like ideal results, they are not ideal themselves. Only few of us like to review or being reviewed, especially when it comes to pull requests with lots of commits and improvements.</p>
+
+<p>In the previous chapters we told you about theoretical aspect of code review. Enough theory, let’s proceed to the practical part.</p>
+
+<p>Imagine, you decided to use code reviews to improve your codebase. Here are your steps:</p>
+
+<ol>
+  <li>Create a new branch for your feature and implement it.</li>
+  <li>Create a pull request</li>
+  <li>Assign somebody as a reviewer</li>
+  <li>Reviewer gets a notification about pull request and start commenting your code asking the question pointed below</li>
+  <li>After review is done you have to reply to comments made to elaborate your idea. This often needs to be repeated until both you and reviewer come to agreement</li>
+  <li>Fix your code in the current branch with accordance to remarks</li>
+  <li>After everyone is clear, the pull request gets merged to master</li>
+</ol>
+
+<p>But without of people nonideality they can:</p>
+
+<ul>
+  <li>Forget to assign reviewer to new pull request or even be afraid to assign someone. As a result nobody gets notified about the pull request and it can abandoned for a long time (it is not a joke, some pull requests can be reviewed in a year)</li>
+  <li>Be discontent because somebody don’t have time to review changes and he don’t have time to merge the branch with tons of conflicts.</li>
+  <li>Merge unreviewed changes before 5 minutes to deadline. Developers can miss changes because of lack of notifications about new unassigned pull requests.</li>
+  <li>Hate code review and git flow because of pointed below and promote this point of view to junior developers.</li>
+</ul>
+
+<p>We believe that the mission of every developer is to look after his code, and we cannot stand watching our colleagues giving up the benefits of best practices. Thus we created <a href="http://blamewarrior.com">BlameWarrior</a> - a project that helps to make your code base less smelly.</p>
+
+<p>With <a href="http://blamewarrior.com">BlameWarrior</a> you can:</p>
+
+<ol>
+  <li>“Attack” the author of the code by discussing their changes. We rely on “The Random Almighty” that will help you to pick a reviewer from your collaborators.</li>
+  <li>“Defend” your technical decisions and get rewarded for the every line you have changed and advocated. The bigger the pull request, the bigger the reward you get.</li>
+  <li>Be perpetuated in the Hall of Fame and obtain awards blessed by the Allpowered Gods.</li>
+</ol>
+
+<p>Want to give <a href="http://blamewarrior.com">BlameWarrior</a> a try? Here is what you need to do:</p>
+
+<ol>
+  <li>Get in invitation here: <a href="https://blamewarrior.com/invitation/requests/new">https://blamewarrior.com/invitation/requests/new</a></li>
+  <li>Go to <a href="http://blamewarrior.com">https://blamewarrior.com</a></li>
+  <li>Sign in via GitHub</li>
+  <li>Choose a repository in which you want to set up your battleground.</li>
+</ol>
+
+<p>That’s it. Do code review and use GitHub flow the way you did before. BlameWarrior assigns the reviewer, calculates scores for comments and diffs automatically in the background. You only need check your scores and positions in the Hall of Fame. We didn’t do any kind of email notifications intentionally because we don’t like tons of emails from services  - all important notifications GitHub already does.</p>
+
+<p>Let’s bathe in the glory with BlameWarrior and may the Gods be with you!</p>
+
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <small>
+      Powered by <a href="http://pixyll.com/">Pixyll theme</a> and <a href="https://jekyllrb.com//">jekyll</a>
+    </small>
+  </div>
+</footer>
+
+</body>
+</html>

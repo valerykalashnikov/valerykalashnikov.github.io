@@ -13,7 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201603141241" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201608021702" type="text/css">
 
     <!-- Fonts -->
     
@@ -46,6 +46,29 @@
     <meta name="twitter:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/" />
 
     
+    <!-- Begin Jekyll SEO tag v1.3.2 -->
+<title>Deploying rails apps, part 3. Configuring capistrano, nginx with puma - BigK’s blog</title>
+<meta property="og:title" content="Deploying rails apps, part 3. Configuring capistrano, nginx with puma" />
+<meta name="description" content="In the previous article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configure Nginx and Puma server and logrotate." />
+<meta property="og:description" content="In the previous article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configure Nginx and Puma server and logrotate." />
+<link rel="canonical" href="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/" />
+<meta property="og:url" content="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/" />
+<meta property="og:site_name" content="BigK’s blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-02-08T15:07:54+03:00" />
+<link rel="next" href="http://bigk.me/javascript/2016/03/10/presenters-in-javascript/" title="Presenters in javascript" />
+<link rel="prev" href="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/" title="Deploying rails apps, part 2. Setting up the necessary software" />
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Deploying rails apps, part 3. Configuring capistrano, nginx with puma",
+    "datePublished": "2015-02-08T15:07:54+03:00",
+    "description": "In the previous article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configure Nginx and Puma server and logrotate.",
+    "url": "http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/"
+  }
+</script>
+<!-- End Jekyll SEO tag -->
 </head>
 
 <body class="site">
@@ -112,11 +135,11 @@
 </div>
 
 <article class="post-content">
-  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/">previous</a> article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.</p>
+  <p>In the <a href="http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/">previous</a> article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configure Nginx and Puma server and logrotate.</p>
 
 <h2 id="capistrano">Capistrano</h2>
 
-<p>To the Gemfile of your application add this lines or neccessary gems, mentioned below:</p>
+<p>Add this lines or neccessary gems to the Gemfile of your application, mentioned below:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>  gem 'puma'
 </code></pre>
@@ -227,7 +250,7 @@ Don’t forget to create in shared folder files linked before (yes, that files a
 </code></pre>
 </div>
 
-<p>add these config options</p>
+<p>add there this config options</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>upstream application {
   server unix:/home/deploy/apps/APPNAME/shared/tmp/sockets/puma.sock fail_timeout=0;
@@ -300,7 +323,7 @@ server {
 </code></pre>
 </div>
 
-<p>where replace ‘your_app_name’ to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the deployment problem I didn't want to know what means each line of this config.</p>
+<p>where replace ‘your_app_name’ to your real app name. Tell about each line is out of this article because this articles is like a tutorial for people like me. When I stood in front of the problem deployment problem it was the last thing that I wanted to know what means each line of this config.</p>
 
 <p>After that go to /etc/nginx/sites-enabled and create symlink to the file described below.</p>
 

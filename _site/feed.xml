@@ -7,10 +7,172 @@
     <atom:link href="http://bigk.me/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
-        <title>The easiest way to localize SPA application using polyglot.js</title>
-        <description>&lt;p&gt;For a long time ago when I was a teenager with long black hair excited with new Flash page, there wasn’t such question like web page localization with JavaScript. Indeed, there weren’t any JavaScript-intensive pages to localize.&lt;/p&gt;
+        <title>Game of Code Review. How code review can improve the health of your team</title>
+        <description>&lt;p&gt;&lt;img src=&quot;/images/code_review.png&quot; alt=&quot;Code review image&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;But at the age where JavaScript got triumph and each student make their own framework you can be encountered with such question.&lt;/p&gt;
+&lt;p&gt;In fact code review process is a part of agile workflow when developers can spread their skillset across of the team making them more self-organized and responsible. It allows the team to learn better the code base, explore new technologies and gives an overview of a project, which means everyone knows what happens in the whole project not only the code one owns.&lt;/p&gt;
+
+&lt;h2 id=&quot;so-what-is-code-review&quot;&gt;So, what is code review?&lt;/h2&gt;
+
+&lt;p&gt;When you’re done with implementing your feature, another developer goes through your code and asks:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If all cases are implemented&lt;/li&gt;
+  &lt;li&gt;If the new code is well-tested&lt;/li&gt;
+  &lt;li&gt;If there are any errors in the code&lt;/li&gt;
+  &lt;li&gt;If the new code matches the existing best practices and guidelines&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Feature should be accepted once and only all of the above requirements are passed.&lt;/p&gt;
+
+&lt;p&gt;In this article we will not discuss types of code review such using separate email thread, chat or pair programming. All of us did it and nobody likes smiles substituting the commas, colons and parenthesis in the code.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-does-it-matter&quot;&gt;Why does it matter?&lt;/h2&gt;
+
+&lt;h3 id=&quot;sharing-the-knowledge&quot;&gt;Sharing the knowledge&lt;/h3&gt;
+
+&lt;p&gt;As we said, it spreads the knowledge. There aren’t any person who knows only a specific part of the codebase. This implies you can go to vacation and just take a rest without being disturbed by phone calls and emails from the team.&lt;/p&gt;
+
+&lt;h3 id=&quot;estimation&quot;&gt;Estimation&lt;/h3&gt;
+&lt;p&gt;Everybody knows estimation problems and it hurts in most cases. During code review, the author and reviewer know everything about time spent for the feature. They can provide a good feedback and use special arguments during meetings and brainstorms improving the quality of further estimation.&lt;/p&gt;
+
+&lt;h3 id=&quot;discipline&quot;&gt;Discipline&lt;/h3&gt;
+&lt;p&gt;By preparing new feature to review, developers get used to make a separate branch for a new feature, then open pull requests, assign it and waiting for a review. Also this means no pushes to master anymore. Your code becomes nicer and cleaner and developers are more disciplined and happy because they like the code they did.&lt;/p&gt;
+
+&lt;h3 id=&quot;communication&quot;&gt;Communication&lt;/h3&gt;
+&lt;p&gt;The strong team is a team with strong communicative skills. A mess in the code, in the organization process and in entire life is based on miscommunication.
+But… not every developer likes corporate parties with drinks and funny competitions, however everybody know that a good developer is the one who likes to code.
+During the reviewing process developers talk about what they like the most and make their own contests - code review contests.
+At &lt;a href=&quot;http://blamewarrior.com&quot;&gt;BlameWarrior&lt;/a&gt; we’re trying to help developers to make their own contests and to grow the discipline using code reviews, but firstly we have to say some words about code review problems.&lt;/p&gt;
+
+&lt;h2 id=&quot;code-review-problems&quot;&gt;Code review problems&lt;/h2&gt;
+&lt;p&gt;Here are the common issues we experienced while reviewing someone’s code:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Who do they think they are to consider themselves better than me and tell me that this is bad design? It works!&lt;/li&gt;
+  &lt;li&gt;Why do I have to review the mess written by a new junior developer instead of implementing a new rocket-science feature?&lt;/li&gt;
+  &lt;li&gt;I don’t know who will responsible for that pull request. I’ll just leave it here… for a month… or maybe a year.&lt;/li&gt;
+  &lt;li&gt;Dude, sorry, I forgot about your pull request, I’ll review it, seriously.&lt;/li&gt;
+  &lt;li&gt;Sorry boss, we forgot to accept his pull request, we’ll need some more time now to review it and merge, you know…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;crush-your-code-review-problems-with-the-fist-of-blamewarrior&quot;&gt;Crush your code review problems with the fist of BlameWarrior&lt;/h2&gt;
+
+&lt;p&gt;We have to admit, although people like ideal results, they are not ideal themselves. Only few of us like to review or being reviewed, especially when it comes to pull requests with lots of commits and improvements.&lt;/p&gt;
+
+&lt;p&gt;In the previous chapters we told you about theoretical aspect of code review. Enough theory, let’s proceed to the practical part.&lt;/p&gt;
+
+&lt;p&gt;Imagine, you decided to use code reviews to improve your codebase. Here are your steps:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Create a new branch for your feature and implement it.&lt;/li&gt;
+  &lt;li&gt;Create a pull request&lt;/li&gt;
+  &lt;li&gt;Assign somebody as a reviewer&lt;/li&gt;
+  &lt;li&gt;Reviewer gets a notification about pull request and start commenting your code asking the question pointed below&lt;/li&gt;
+  &lt;li&gt;After review is done you have to reply to comments made to elaborate your idea. This often needs to be repeated until both you and reviewer come to agreement&lt;/li&gt;
+  &lt;li&gt;Fix your code in the current branch with accordance to remarks&lt;/li&gt;
+  &lt;li&gt;After everyone is clear, the pull request gets merged to master&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;But without of people nonideality they can:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Forget to assign reviewer to new pull request or even be afraid to assign someone. As a result nobody gets notified about the pull request and it can abandoned for a long time (it is not a joke, some pull requests can be reviewed in a year)&lt;/li&gt;
+  &lt;li&gt;Be discontent because somebody don’t have time to review changes and he don’t have time to merge the branch with tons of conflicts.&lt;/li&gt;
+  &lt;li&gt;Merge unreviewed changes before 5 minutes to deadline. Developers can miss changes because of lack of notifications about new unassigned pull requests.&lt;/li&gt;
+  &lt;li&gt;Hate code review and git flow because of pointed below and promote this point of view to junior developers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We believe that the mission of every developer is to look after his code, and we cannot stand watching our colleagues giving up the benefits of best practices. Thus we created &lt;a href=&quot;http://blamewarrior.com&quot;&gt;BlameWarrior&lt;/a&gt; - a project that helps to make your code base less smelly.&lt;/p&gt;
+
+&lt;p&gt;With BlameWarrior you can:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;“Attack” the author of the code by discussing their changes. The “Random Almighty” will pick and assign a reviewer every time you open a new PR.&lt;/li&gt;
+  &lt;li&gt;“Defend” your technical decisions and get rewarded for the every line you have changed and advocated. The bigger the pull request, the bigger the reward you get.&lt;/li&gt;
+  &lt;li&gt;Be perpetuated in the Hall of Fame and obtain awards blessed by the Allpowered Gods.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Want to give BlameWarrior a try? Here is what you need to do:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Get in invitation here: &lt;a href=&quot;https://blamewarrior.com/invitation/requests/new&quot;&gt;https://blamewarrior.com/invitation/requests/new&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Go to &lt;a href=&quot;http://blamewarrior.com&quot;&gt;https://blamewarrior.com&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Sign in via GitHub&lt;/li&gt;
+  &lt;li&gt;Choose a repository in which you want to set up your battleground.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That’s it. Do code review and use GitHub flow the way you did before. BlameWarrior assigns the reviewer, calculates scores for comments and diffs automatically in the background. You only need check your scores and positions in the Hall of Fame. We didn’t do any kind of email notifications intentionally because we don’t like tons of emails from services  - all important notifications GitHub already does.&lt;/p&gt;
+
+&lt;p&gt;Let’s bathe in the glory with BlameWarrior and may the Gods be with you!&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 25 Jul 2016 12:58:05 +0300</pubDate>
+        <link>http://bigk.me/githubflow/codereview/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/</link>
+        <guid isPermaLink="true">http://bigk.me/githubflow/codereview/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/</guid>
+      </item>
+    
+      <item>
+        <title>Active Admin custom JavaScript for diverse pages</title>
+        <description>&lt;p&gt;Active Admin provides fancy language to implement admin interface fast. But sometimes it would be very helpful to have an ability to add some custom JavaScript to diverse pages and actions.&lt;/p&gt;
+
+&lt;p&gt;For example, we have file &lt;code class=&quot;highlighter-rouge&quot;&gt;articles.rb&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;app/admin&lt;/code&gt; folder.
+And we want to add some custom JS only to edit action, for example.
+Of course, we can manipulate JavaScript adding one in &lt;code class=&quot;highlighter-rouge&quot;&gt;config/active_admin.rb&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;register_javascript&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;custom_javascript.js&#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But it would be awesome to add per page javascript for separate action (‘edit’ as you remember). During my research and googling I found one hack to implement such functionality:&lt;/p&gt;
+
+&lt;p&gt;Put &lt;code class=&quot;highlighter-rouge&quot;&gt;layout.rb&lt;/code&gt; into &lt;code class=&quot;highlighter-rouge&quot;&gt;app/admin&lt;/code&gt; folder with this content:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ActiveAdmin::Views::Pages::BaseExtension&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add_classes_to_body&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set_attribute&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;data-controller&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gsub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/^admin\//&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set_attribute&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;data-action&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Pages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# mixes in the module directly below the class&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;prepend&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Pages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BaseExtension&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add to &lt;code class=&quot;highlighter-rouge&quot;&gt;app/assets/javascripts/active_admin.js.coffee&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nx&quot;&gt;ActiveAdmin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;dashboard&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;articles#edit&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;body&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;controller&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;body&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;action&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ActiveAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Well, that’s it.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 11 May 2016 00:00:00 +0300</pubDate>
+        <link>http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/</link>
+        <guid isPermaLink="true">http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/</guid>
+      </item>
+    
+      <item>
+        <title>The easiest way to localize SPA application using polyglot.js</title>
+        <description>&lt;p&gt;For a long time ago when I was a teenager with long black hair excited with new Flash page, there wasn’t such thing like web page localization with JavaScript. Indeed, there weren’t any JavaScript-intensive pages to localize.&lt;/p&gt;
+
+&lt;p&gt;But at the age where JavaScript got triumph and each kid makes their own framework you can be encountered with such question.&lt;/p&gt;
 
 &lt;p&gt;Firstly, your should google and find library to localize your application. I found &lt;a href=&quot;http://airbnb.io/polyglot.js/&quot;&gt;polyglot.js&lt;/a&gt; but your can find something similar.&lt;/p&gt;
 
@@ -24,7 +186,7 @@
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Then include the code below somewhere you want&lt;/p&gt;
+&lt;p&gt;Next include the code below somewhere you want&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;//Obtain locale from somewhere (cookie, localstorage, url ...)&lt;/span&gt;
   &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;locale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getLocale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
@@ -47,7 +209,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Then we can use it in our templates files like this&lt;/p&gt;
+&lt;p&gt;Now we can use it in our templates files like this&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/sign_in&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sign-in&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;{{t &#39;sign_in&#39;}}&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -55,7 +217,7 @@
 
 &lt;p&gt;That’s it!&lt;/p&gt;
 </description>
-        <pubDate>Sat, 12 Mar 2016 00:00:00 +0600</pubDate>
+        <pubDate>Sat, 12 Mar 2016 00:00:00 +0300</pubDate>
         <link>http://bigk.me/javascript/2016/03/12/the-easiest-way-to-localize-spa-application-using-polyglotjs/</link>
         <guid isPermaLink="true">http://bigk.me/javascript/2016/03/12/the-easiest-way-to-localize-spa-application-using-polyglotjs/</guid>
       </item>
@@ -78,8 +240,8 @@
           &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
           &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-              &lt;span class=&quot;na&quot;&gt;avatarUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;avatarUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-              &lt;span class=&quot;na&quot;&gt;fullName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;findChannel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;sms&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;avatarUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;avatarUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;fullName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fullName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
           &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
       &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -123,18 +285,18 @@
 
 &lt;p&gt;Here we go!&lt;/p&gt;
 </description>
-        <pubDate>Thu, 10 Mar 2016 00:00:00 +0600</pubDate>
+        <pubDate>Thu, 10 Mar 2016 00:00:00 +0300</pubDate>
         <link>http://bigk.me/javascript/2016/03/10/presenters-in-javascript/</link>
         <guid isPermaLink="true">http://bigk.me/javascript/2016/03/10/presenters-in-javascript/</guid>
       </item>
     
       <item>
         <title>Deploying rails apps, part 3. Configuring capistrano, nginx with puma</title>
-        <description>&lt;p&gt;In the &lt;a href=&quot;http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/&quot;&gt;previous&lt;/a&gt; article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configuring Nginx and Puma server and logrotate.&lt;/p&gt;
+        <description>&lt;p&gt;In the &lt;a href=&quot;http://bigk.me/posts/deploying-rails-apps-part-2-setting-up-software/&quot;&gt;previous&lt;/a&gt; article we’ve set up the necessary soft for our rails application. In this article we’ll meet wit Capistrano, configure Nginx and Puma server and logrotate.&lt;/p&gt;
 
 &lt;h2 id=&quot;capistrano&quot;&gt;Capistrano&lt;/h2&gt;
 
-&lt;p&gt;To the Gemfile of your application add this lines or neccessary gems, mentioned below:&lt;/p&gt;
+&lt;p&gt;Add this lines or neccessary gems to the Gemfile of your application, mentioned below:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  gem &#39;puma&#39;
 &lt;/code&gt;&lt;/pre&gt;
@@ -353,7 +515,7 @@ ln -s ../sites-available/your_app_name.conf
 &lt;p&gt;That is all. If all was correct you should see your site in the browser at http://your-machine-ip&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 08 Feb 2015 15:07:54 +0600</pubDate>
+        <pubDate>Sun, 08 Feb 2015 15:07:54 +0300</pubDate>
         <link>http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/</link>
         <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/</guid>
       </item>
@@ -393,6 +555,8 @@ ln -s ../sites-available/your_app_name.conf
   &lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;url -sSL https://get.rvm.io | bash -s stable
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
+&lt;p&gt;Don’t forget to reload your shell to use rvm command.&lt;/p&gt;
 
 &lt;p&gt;Install ruby&lt;/p&gt;
 
@@ -442,7 +606,7 @@ Don’t forget to switch to root or use sudo.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;During the installation PostgreSQL created ‘postgres’ user. So, let’s start use database console as postgres user.&lt;/p&gt;
+&lt;p&gt;During the installation PostgreSQL created ‘postgres’ user. So, let’s start to use database console as postgres user.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  sudo -u postgres psql
 &lt;/code&gt;&lt;/pre&gt;
@@ -454,9 +618,9 @@ Don’t forget to switch to root or use sudo.&lt;/p&gt;
   alter role deploy login;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;We’ve created new database user ‘deploy’, give him superuser rights and allow him to login. This user can login but only from the localhost.&lt;/p&gt;
+&lt;p&gt;We’ve created new database user ‘deploy’, gave him superuser rights and allowed him to login. This user can login but only from the localhost.&lt;/p&gt;
 
-&lt;p&gt;The good way is not use postgresql default config postgresql.conf. If you are not Posgtges-guru you can setting up the special tool called ‘pgtune’ that configure you database based on your environment.&lt;/p&gt;
+&lt;p&gt;The good way is not to use postgresql default config postgresql.conf. If you are not Postgres-guru you can set up the special tool called ‘pgtune’ that configures you database based on your environment.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  apt-get install pgtune
 &lt;/code&gt;&lt;/pre&gt;
@@ -480,7 +644,7 @@ Don’t forget to switch to root or use sudo.&lt;/p&gt;
 &lt;p&gt;In this section we setting up the necessary software to serve rails application. In the next section I cover how to install and configure Capistrano with Puma server and how to configure Nginx.&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 08 Feb 2015 15:02:54 +0600</pubDate>
+        <pubDate>Sun, 08 Feb 2015 15:02:54 +0300</pubDate>
         <link>http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/</link>
         <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-2-setting-up-software/</guid>
       </item>
@@ -555,6 +719,7 @@ vent us to type it on every sneeze via adding your public key to authorized_keys
 &lt;p&gt;or&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  mkdir -p ~/.ssh
+  &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; .ssh
   touch authorized_keys
   vim authorized_keys
 &lt;/code&gt;&lt;/pre&gt;
@@ -572,7 +737,7 @@ vent us to type it on every sneeze via adding your public key to authorized_keys
 
 &lt;p&gt;In the next chapter we’ll set up the neccessary software to our new server.&lt;/p&gt;
 </description>
-        <pubDate>Sat, 07 Feb 2015 22:05:54 +0600</pubDate>
+        <pubDate>Sat, 07 Feb 2015 22:05:54 +0300</pubDate>
         <link>http://bigk.me/rails/deployment/2015/02/07/deploying-rails-apps-part-1-bootstrap-the-server/</link>
         <guid isPermaLink="true">http://bigk.me/rails/deployment/2015/02/07/deploying-rails-apps-part-1-bootstrap-the-server/</guid>
       </item>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Active Admin custom JavaScript for diverse pages &#8211; BigK's blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Simple hack to add per page JS to active admin">
+    <meta name="robots" content="all">
+    <meta name="author" content="Big K">
+    <meta name="keywords" content="javascript, rails, active_admin">
+    <link rel="canonical" href="http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608021702" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Active Admin custom JavaScript for diverse pages">
+    <meta property="og:description" content="BigK&#39;s blog">
+    <meta property="og:url" content="http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/">
+    <meta property="og:site_name" content="BigK&#39;s blog">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Active Admin custom JavaScript for diverse pages" />
+    <meta name="twitter:description" content="Simple hack to add per page JS to active admin" />
+    <meta name="twitter:url" content="http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/" />
+
+    
+    <!-- Begin Jekyll SEO tag v1.3.2 -->
+<title>Active Admin custom JavaScript for diverse pages - BigK’s blog</title>
+<meta property="og:title" content="Active Admin custom JavaScript for diverse pages" />
+<meta name="description" content="Active Admin provides fancy language to implement admin interface fast. But sometimes it would be very helpful to have an ability to add some custom JavaScript to diverse pages and actions." />
+<meta property="og:description" content="Active Admin provides fancy language to implement admin interface fast. But sometimes it would be very helpful to have an ability to add some custom JavaScript to diverse pages and actions." />
+<link rel="canonical" href="http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/" />
+<meta property="og:url" content="http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/" />
+<meta property="og:site_name" content="BigK’s blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-05-11T00:00:00+03:00" />
+<link rel="next" href="http://bigk.me/githubflow/codereview/2016/07/25/game-of-code-review-how-code-review-can-improve-the-health-of-your-team/" title="Game of Code Review. How code review can improve the health of your team" />
+<link rel="prev" href="http://bigk.me/javascript/2016/03/12/the-easiest-way-to-localize-spa-application-using-polyglotjs/" title="The easiest way to localize SPA application using polyglot.js" />
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Active Admin custom JavaScript for diverse pages",
+    "datePublished": "2016-05-11T00:00:00+03:00",
+    "description": "Active Admin provides fancy language to implement admin interface fast. But sometimes it would be very helpful to have an ability to add some custom JavaScript to diverse pages and actions.",
+    "url": "http://bigk.me/javascript/rails/active_admin/2016/05/11/active-admin-custom-javascript-for-diverse-pages/"
+  }
+</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://bigk.me" class="site-title">BigK's blog</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Active Admin custom JavaScript for diverse pages</h1>
+  <span class="post-meta">May 11, 2016</span><br>
+  
+  <span class="post-meta small">
+  
+    1 minute read
+  
+  </span>
+</div>
+
+<article class="post-content">
+  <p>Active Admin provides fancy language to implement admin interface fast. But sometimes it would be very helpful to have an ability to add some custom JavaScript to diverse pages and actions.</p>
+
+<p>For example, we have file <code class="highlighter-rouge">articles.rb</code> in <code class="highlighter-rouge">app/admin</code> folder.
+And we want to add some custom JS only to edit action, for example.
+Of course, we can manipulate JavaScript adding one in <code class="highlighter-rouge">config/active_admin.rb</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  <span class="n">config</span><span class="p">.</span><span class="nf">register_javascript</span> <span class="s1">'custom_javascript.js'</span>
+</code></pre>
+</div>
+
+<p>But it would be awesome to add per page javascript for separate action (‘edit’ as you remember). During my research and googling I found one hack to implement such functionality:</p>
+
+<p>Put <code class="highlighter-rouge">layout.rb</code> into <code class="highlighter-rouge">app/admin</code> folder with this content:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  <span class="k">module</span> <span class="nn">ActiveAdmin::Views::Pages::BaseExtension</span>
+    <span class="k">def</span> <span class="nf">add_classes_to_body</span>
+      <span class="k">super</span>
+      <span class="vi">@body</span><span class="p">.</span><span class="nf">set_attribute</span> <span class="s2">"data-controller"</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="ss">:controller</span><span class="p">].</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/^admin\//</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+      <span class="vi">@body</span><span class="p">.</span><span class="nf">set_attribute</span> <span class="s2">"data-action"</span><span class="p">,</span>     <span class="n">params</span><span class="p">[</span><span class="ss">:action</span><span class="p">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ActiveAdmin</span><span class="o">::</span><span class="no">Views</span><span class="o">::</span><span class="no">Pages</span><span class="o">::</span><span class="no">Base</span>
+    <span class="c1"># mixes in the module directly below the class</span>
+    <span class="n">prepend</span> <span class="no">ActiveAdmin</span><span class="o">::</span><span class="no">Views</span><span class="o">::</span><span class="no">Pages</span><span class="o">::</span><span class="no">BaseExtension</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Add to <code class="highlighter-rouge">app/assets/javascripts/active_admin.js.coffee</code></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  <span class="nx">ActiveAdmin</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">dashboard</span><span class="o">:</span> <span class="p">{},</span>
+    <span class="na">articles</span><span class="o">:</span> <span class="p">{}</span>
+  <span class="p">}</span>
+
+  <span class="nx">ActiveAdmin</span><span class="p">.</span><span class="na">articles</span><span class="p">.</span><span class="na">edit</span> <span class="o">=</span> <span class="p">()</span> <span class="o">-&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="na">log</span><span class="p">(</span><span class="s">'articles#edit'</span><span class="p">)</span>
+
+  <span class="nx">$</span><span class="p">(()</span> <span class="o">-&gt;</span>
+    <span class="nx">controller</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s">'body'</span><span class="p">).</span><span class="na">data</span><span class="p">(</span><span class="s">'controller'</span><span class="p">)</span>
+    <span class="nx">action</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s">'body'</span><span class="p">).</span><span class="na">data</span><span class="p">(</span><span class="s">'action'</span><span class="p">)</span>
+    <span class="nx">ActiveAdmin</span><span class="p">[</span><span class="nx">controller</span><span class="p">][</span><span class="nx">action</span><span class="p">]()</span> <span class="k">if</span> <span class="nx">ActiveAdmin</span><span class="p">[</span><span class="nx">controller</span><span class="p">]</span><span class="o">?</span> <span class="o">&amp;&amp;</span> <span class="nx">ActiveAdmin</span><span class="p">[</span><span class="nx">controller</span><span class="p">][</span><span class="nx">action</span><span class="p">]</span><span class="o">?</span>
+  <span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Well, that’s it.</p>
+
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <small>
+      Powered by <a href="http://pixyll.com/">Pixyll theme</a> and <a href="https://jekyllrb.com//">jekyll</a>
+    </small>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -13,7 +13,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS Feed for BigK's blog" href="/feed.xml" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/pixyll.css?201603141241" type="text/css">
+    <link rel="stylesheet" href="/css/pixyll.css?201608021702" type="text/css">
 
     <!-- Fonts -->
     
@@ -46,6 +46,29 @@
     <meta name="twitter:url" content="http://bigk.me/javascript/2016/03/10/presenters-in-javascript/" />
 
     
+    <!-- Begin Jekyll SEO tag v1.3.2 -->
+<title>Presenters in javascript - BigK’s blog</title>
+<meta property="og:title" content="Presenters in javascript" />
+<meta name="description" content="If you find that you have a lot of complex logic in your views and helpers, presenters can help you to clean up your code by using object-oriented approach." />
+<meta property="og:description" content="If you find that you have a lot of complex logic in your views and helpers, presenters can help you to clean up your code by using object-oriented approach." />
+<link rel="canonical" href="http://bigk.me/javascript/2016/03/10/presenters-in-javascript/" />
+<meta property="og:url" content="http://bigk.me/javascript/2016/03/10/presenters-in-javascript/" />
+<meta property="og:site_name" content="BigK’s blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-03-10T00:00:00+03:00" />
+<link rel="next" href="http://bigk.me/javascript/2016/03/12/the-easiest-way-to-localize-spa-application-using-polyglotjs/" title="The easiest way to localize SPA application using polyglot.js" />
+<link rel="prev" href="http://bigk.me/rails/deployment/2015/02/08/deploying-rails-apps-part-3-configuring-nginx-capistrano-with-puma/" title="Deploying rails apps, part 3. Configuring capistrano, nginx with puma" />
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Presenters in javascript",
+    "datePublished": "2016-03-10T00:00:00+03:00",
+    "description": "If you find that you have a lot of complex logic in your views and helpers, presenters can help you to clean up your code by using object-oriented approach.",
+    "url": "http://bigk.me/javascript/2016/03/10/presenters-in-javascript/"
+  }
+</script>
+<!-- End Jekyll SEO tag -->
 </head>
 
 <body class="site">
@@ -128,8 +151,8 @@
           <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
 
           <span class="k">return</span> <span class="p">{</span>
-              <span class="na">avatarUrl</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">avatarUrl</span><span class="p">(),</span>
-              <span class="na">fullName</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">findChannel</span><span class="p">(</span><span class="s1">'sms'</span><span class="p">)</span>
+              <span class="na">avatarUrl</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">avatarUrl</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+              <span class="na">fullName</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span><span class="p">()</span>
           <span class="p">}</span>
 
       <span class="p">}</span>
